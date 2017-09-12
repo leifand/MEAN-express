@@ -31,7 +31,7 @@ app.post('/users', function(request, result) {
     var user = request.body;
     console.log("user", user)
     console.log(user.name)
-    return result.render('result', {user: user});
+    return result.redirect('result', {user: user});
 });
 
 // run the server yay
