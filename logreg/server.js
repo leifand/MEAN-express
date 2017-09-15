@@ -1,27 +1,35 @@
+/*  server.js for logreg app
+    leif anderson 7/15/17
+*/
+
 // dependencies
 //
 const express = require('express')
 const bodyParser = require('body-parser')
-const mongoose = require('mongoose')
-const path = require('path')
+const session = require('express-session')
 const port = 8000;
 
-// use express
-//
 app = express();
 
-// ihartbodyparser
+// middleware
 //
-app.use(bodyParser.urlencoded({ extended: true }))
-
-// set up views and templating engine
-//
-app.set('views', path.join(__dirname, './views'))
 app.set('view engine', 'ejs')
+app.set('views', __dirname + '/client/static')
 
-// connect to mongoose
+app.use(express.static(__dirname + 'client/static'))
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(session({
+  secret: 'grumpycatislife',
+  resave: false,
+  saveUninitialized: true
+}))
+
+// mongoose
 //
-const connection = mongoose.connect("mongodb://localhost/logreg_db")
+require('./server/config/mongoose')
 
+// routes
+//
+require('./server/config/routes')(app)
 
-app.listen(port, () => { console.log('PORT', port)})
+app.listen(port, () => console.log('PORT', port))
